@@ -3,9 +3,8 @@ SUBDIRS = svn
 lib_LTLIBRARIES = mod_authnz_crowd.la
 mod_authnz_crowd_la_SOURCES = mod_authnz_crowd.c mod_authnz_crowd.h crowd_client.c crowd_client.h cache.c cache.h util.c util.h
 mod_authnz_crowd_la_LDFLAGS = -module -lcurl `xml2-config --libs`
-AM_CFLAGS = `apr-1-config --cflags`
+AM_CFLAGS = `apr-1-config --cflags` -g -Wmissing-prototypes -O1 # -O2 causes mysterious crashes
 AM_CPPFLAGS = -I@APACHE_INCLUDE_DIR@ `apr-1-config --cppflags --includes` `xml2-config --cflags`
-CFLAGS=-g -Wmissing-prototypes -O1   # -O2 causes mysterious crashes
 TESTS = test.py
 TESTS_ENVIRONMENT = APACHE_BIN_DIR=@APACHE_BIN_DIR@
 

@@ -1,5 +1,9 @@
 AC_INIT([mod_authnz_crowd], m4_esyscmd([./version-gen]), [support@atlassian.com])
 AM_INIT_AUTOMAKE([-Wall foreign])
+
+m4_pattern_allow([AM_PROG_AR])
+AM_PROG_AR
+
 AC_PROG_CC
 AC_PROG_LIBTOOL
 AC_CONFIG_HEADERS([config.h])
