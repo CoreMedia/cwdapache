@@ -41,27 +41,3 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/httpd/modules/mod_authnz_crowd.so
 %attr(755,root,root) %{_libdir}/httpd/modules/mod_authz_svn_crowd.so
 %doc LICENSE
-
-%post
-/usr/sbin/apxs -e -a -n authnz_crowd mod_authnz_crowd.so
-cat << END > /tmp/httpd.conf.sed
-/^[ \t]*[Ll][Oo][Aa][Dd][Mm][Oo][Dd][Uu][Ll][Ee][ \t]\+authz_svn_module[ \t]/ {
-    s/^/# /
-    a\
-LoadModule authz_svn_crowd_module   modules/mod_authz_svn_crowd.so
-}
-END
-sed -i.bak -f /tmp/httpd.conf.sed /etc/httpd/conf/httpd.conf /etc/httpd/conf.d/*.conf
-/usr/sbin/apachectl configtest
-/usr/sbin/apachectl graceful || true
-
-%preun
-/usr/sbin/apxs -e -A -n authnz_crowd mod_authnz_crowd.so
-cat << END > /tmp/httpd.conf.sed
-/^[ \t]*[Ll][Oo][Aa][Dd][Mm][Oo][Dd][Uu][Ll][Ee][ \t]\+authz_svn_crowd_module[ \t]/ {
-    s/^/# /
-}
-END
-sed -i.bak -f /tmp/httpd.conf.sed /etc/httpd/conf/httpd.conf /etc/httpd/conf.d/*.conf
-/usr/sbin/apachectl configtest
-/usr/sbin/apachectl graceful || true

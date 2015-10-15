@@ -30,6 +30,65 @@ Last tested on CentOS 6.5:
     ./configure
     make
 
+## Building on CentOS 7
+
+Last tested on CentOS 7.1:
+
+    yum install autoconf automake curl-devel httpd-devel libtool libxml2-devel subversion-devel curl httpd-devel libtool libxml2 mod_dav_svn
+    libtoolize
+    autoreconf --install
+    ./configure
+    make
+
+# After installing
+
+Apache 2.2 Config Example
+
+```
+    <Location />
+      AuthName "Crowd protected login"
+      AuthType Basic
+      AuthBasicProvider crowd
+      CrowdAppName YOUR_CROWD_APP
+      CrowdAppPassword YOUR_CROWD_PASSWORD
+      CrowdURL YOUR_CROWD_URL
+      Require group YOUR_CROWD_GROUPS
+      AuthzUserAuthoritative Off
+      CrowdSSLVerifyPeer off
+      Satisfy any
+      Order deny,allow
+      Deny from all
+      Allow from YOUR_IP
+    </Location>
+```
+
+Apache 2.4 Config Example
+
+```
+    <Location />
+        <RequireAll>
+          AuthName "Crowd protected login"
+          AuthType Basic
+          AuthBasicProvider crowd
+          CrowdAppName YOUR_CROWD_APP
+          CrowdAppPassword YOUR_CROWD_PASSWORD
+          CrowdURL YOUR_CROWD_URL
+          CrowdSSLVerifyPeer off
+          Require group YOUR_CROWD_GROUPS
+          <RequireAny>
+            Require ip YOUR_IP
+            Require ip YOUR_IP2
+          </RequireAny>
+        </RequireAll>
+    </Location>
+```
+
+You have to load the module using this snipped. No automatically module enablement anymore.
+
+```
+    LoadModule authnz_crowd_module /usr/lib64/httpd/modules/mod_authnz_crowd.so
+```
+
 ### Optional: How to Build an RPM
 
 If you'd like to build an RPM for later installation:
