@@ -4,6 +4,9 @@
 .deps
 .libs
 
+.idea/
+*.iml
+
 Makefile
 Makefile.in
 aclocal.m4
