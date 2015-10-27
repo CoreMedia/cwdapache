@@ -24,7 +24,7 @@ The following instructions assume your current working directory is the director
 
 Last tested on CentOS 6.5:
 
-    yum install autoconf automake curl-devel httpd-devel libtool libxml2-devel subversion-devel curl httpd-devel libtool libxml2 mod_dav_svn
+    yum install autoconf automake curl-devel httpd-devel libtool libxml2-devel subversion-devel curl libxml2 mod_dav_svn
     libtoolize
     autoreconf --install
     ./configure
@@ -34,7 +34,34 @@ Last tested on CentOS 6.5:
 
 Last tested on CentOS 7.1:
 
-    yum install autoconf automake curl-devel httpd-devel libtool libxml2-devel subversion-devel curl httpd-devel libtool libxml2 mod_dav_svn
+    yum install autoconf automake curl-devel httpd-devel libtool libxml2-devel subversion-devel curl libxml2 mod_dav_svn
+    libtoolize
+    autoreconf --install
+    ./configure
+    make
+
+## Building on AMAZON and httpd 2.4
+
+First you have to modify: *packages/mod_authnz_crowd.spec*
+
+```
+--- a/packages/mod_authnz_crowd.spec
++++ b/packages/mod_authnz_crowd.spec
+@@ -8,8 +8,8 @@ URL:            https://confluence.atlassian.com/display/CROWD/Integrating+Crowd
+ Source0:        %{name}-%{version}.tar.gz
+ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+-BuildRequires:  autoconf automake curl-devel httpd-devel libtool libxml2-devel subversion-devel
+-Requires:       curl httpd-devel libtool libxml2 mod_dav_svn
++BuildRequires:  autoconf automake curl-devel httpd24-devel libtool libxml2-devel subversion-devel
++Requires:       curl httpd24-devel libtool libxml2 mod24_dav_svn
+
+ Group:          System Environment/Daemons
+```
+
+now you can
+
+    yum install autoconf automake curl-devel httpd24-devel libtool libxml2-devel subversion-devel curl libxml2 mod24_dav_svn
     libtoolize
     autoreconf --install
     ./configure
@@ -52,7 +79,7 @@ Apache 2.2 Config Example
       CrowdAppName YOUR_CROWD_APP
       CrowdAppPassword YOUR_CROWD_PASSWORD
       CrowdURL YOUR_CROWD_URL
-      Require group YOUR_CROWD_GROUPS
+      Require crowd-group YOUR_CROWD_GROUPS
       AuthzUserAuthoritative Off
       CrowdSSLVerifyPeer off
       Satisfy any
@@ -74,7 +101,7 @@ Apache 2.4 Config Example
           CrowdAppPassword YOUR_CROWD_PASSWORD
           CrowdURL YOUR_CROWD_URL
           CrowdSSLVerifyPeer off
-          Require group YOUR_CROWD_GROUPS
+          Require crowd-group YOUR_CROWD_GROUPS
           <RequireAny>
             Require ip YOUR_IP
             Require ip YOUR_IP2
